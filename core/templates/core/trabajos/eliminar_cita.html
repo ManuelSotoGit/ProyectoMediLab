@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block Principal %}
+<div class="container py-5">
+    <h2 class="text-center mb-4">Eliminar Cita</h2>
+    <p>¿Estás seguro de que deseas eliminar la cita programada para <strong>{{ cita.nombre }}</strong>?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'recepcionista' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

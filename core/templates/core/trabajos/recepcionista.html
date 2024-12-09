@@ -1,0 +1,146 @@
+{% extends 'core/base.html' %}
+{% block Principal %}
+
+<div class="container py-5">
+    <h1 class="text-center mb-4">Panel del Recepcionista</h1>
+
+    <!-- Botón para Abrir el Modal -->
+    <div class="text-end mb-3">
+        {% if perms.core.add_cita %}
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRegistrarCita">
+            Registrar Nueva Cita
+        </button>
+        {% endif %}
+    </div>
+
+    <!-- Modal para Registrar Nueva Cita -->
+    <div class="modal fade" id="modalRegistrarCita" tabindex="-1" aria-labelledby="modalRegistrarCitaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalRegistrarCitaLabel">Registrar Nueva Cita</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Registrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Listado de Citas -->
+    <h3 class="mt-4 mb-3">Citas Programadas</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Paciente</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Especialidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cita in citas %}
+                <tr>
+                    <td>{{ cita.id }}</td>
+                    <td>{{ cita.nombre }}</td>
+                    <td>{{ cita.fecha_cita }}</td>
+                    <td>{{ cita.get_hora_cita_display }}</td>
+                    <td>{{ cita.especialidadMedico.especialidad }}</td>
+                    <td>
+                        <!-- Botón para Editar -->
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarCita{{ cita.id }}">
+                            Editar
+                        </button>
+                        <!-- Botón para Eliminar -->
+                         {% if perms.core.delete_cita %}
+                        <form method="POST" action="{% url 'eliminar_cita' cita.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+               
+                
+                <!-- Modal para Editar Cita -->
+                <div class="modal fade" id="modalEditarCita{{ cita.id }}" tabindex="-1" aria-labelledby="modalEditarCitaLabel{{ cita.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditarCitaLabel{{ cita.id }}">Editar Cita</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {% if perms.core.change_cita %}
+                                <form method="POST" action="{% url 'editar_cita' cita.id %}">
+                                {% endif %}
+                                    {% csrf_token %}
+                                    <!-- Campos del formulario -->
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre del Paciente</label>
+                                        <input type="text" name="nombre" class="form-control" value="{{ cita.nombre }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="correo" class="form-label">Correo Electrónico</label>
+                                        <input type="email" name="correo" class="form-control" value="{{ cita.correo }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="telefono" class="form-label">Teléfono</label>
+                                        <input type="text" name="telefono" class="form-control" value="{{ cita.telefono }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="fecha_cita" class="form-label">Fecha de la Cita</label>
+                                        <input type="date" name="fecha_cita" class="form-control" value="{{ cita.fecha_cita }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="hora_cita" class="form-label">Hora de la Cita</label>
+                                        <select name="hora_cita" class="form-control">
+                                            {% for hora in opciones_horas %}
+                                                <option value="{{ hora.0 }}" {% if cita.hora_cita == hora.0 %}selected{% endif %}>
+                                                    {{ hora.1 }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="especialidadMedico" class="form-label">Especialidad</label>
+                                        <select name="especialidadMedico" class="form-control">
+                                            {% for especialidad in especialidades %}
+                                                <option value="{{ especialidad.id }}" {% if cita.especialidadMedico.id == especialidad.id %}selected{% endif %}>
+                                                    {{ especialidad.especialidad }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcion" class="form-label">Descripción</label>
+                                        <textarea name="descripcion" class="form-control" rows="3">{{ cita.descripcion }}</textarea>
+                                    </div>
+                                
+                                    <!-- Botón para Guardar Cambios -->
+                                    <button type="submit" class="btn btn-warning w-100 mt-3">Guardar Cambios</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No hay citas programadas</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

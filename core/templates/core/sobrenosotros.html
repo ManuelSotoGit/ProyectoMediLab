@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block Principal %}
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="d-flex flex-column">
+                        <img class="img-fluid rounded w-75 align-self-end" src="{% static 'core/img/about-1.jpg' %}" alt="">
+                        <img class="img-fluid rounded w-50 bg-white pt-3 pe-3" src="{% static 'core/img/about-2.jpg' %}" alt="" style="margin-top: -25%;">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <p class="d-inline-block border rounded-pill py-1 px-4">Sobre nosotros</p>
+                    <h1 class="mb-4">¿Por qué deberías confiar en nosotros? ¡Conócenos!</h1>
+                    <p>"En MediLab, nuestra prioridad es tu bienestar. Contamos con un equipo altamente capacitado y comprometido con brindar atención médica de calidad, respaldada por tecnología avanzada y una atención humana y cercana. Confía en nosotros porque cada detalle de tu salud importa, y estamos aquí para ofrecerte un servicio confiable y personalizado que se adapte a tus necesidades."</p>
+                    <p class="mb-4">"En MediLab entendemos que tu salud es lo más importante, por eso trabajamos con dedicación para garantizar que recibas un trato excepcional desde el primer contacto. Nuestra filosofía se basa en la confianza, la ética profesional y el cuidado integral. Cada uno de nuestros servicios está diseñado para cubrir tus necesidades médicas con precisión y calidez, porque creemos que la combinación de tecnología avanzada y atención humana puede marcar la diferencia en tu bienestar. ¡Permítenos ser tu aliado en el cuidado de tu salud!"</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Atención médica de calidad garantizada</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Médicos altamente calificados y comprometidos</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Líderes en investigación y tecnología médica</p>
+                    <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="">Leer Más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+{% endblock %}
